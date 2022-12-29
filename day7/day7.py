@@ -9,6 +9,16 @@ class Node:
     def addchild(self, child):
         self.children.append(child) 
 
+    def getdirsize(self):
+        total = 0
+        for child in self.children:
+            if child.size is not None:
+                total = total + child.size
+            else:
+                total = total + child.getdirsize()
+        return total
+
+
 dirs = []
 # build up tree, keep pointer to all dirs, write a recursive function to find size of each dir in list
 """
@@ -37,7 +47,7 @@ for i in range(1, len(lines)):
                 dirs.append(child)
                 curr.addchild(child)
             else:
-                child = Node(curr, line[1], line[0])
+                child = Node(curr, line[1], int(line[0]))
                 curr.addchild(child)
             if i < len(lines) - 1:
                 i = i + 1
@@ -53,7 +63,18 @@ for i in range(1, len(lines)):
             if child.name == direc:
                 curr = child
                 break
- 
+total = 0
+for direc in dirs:
+    size = direc.getdirsize()
+    if size <= 100000:
+        total = total + size
+print(total)
 
+excess = 30000000 - (70000000 - root.getdirsize())
+options = {}
+for direc in dirs:
+    size = direc.getdirsize()
+    if size > excess:
+        options[direc] = size
+print(min(options, key=options.get).getdirsize())
 
-    
